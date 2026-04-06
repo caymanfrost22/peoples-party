@@ -172,6 +172,16 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user || user.email !== 'caymanfrost22@gmail.com') {
+        router.push('/admin')
+      }
+    }
+    checkAuth()
+  }, [router])
+
+  useEffect(() => {
     const init = async () => {
       setLoading(true)
       await Promise.all([loadPositions(), loadSubscribers()])
@@ -181,7 +191,7 @@ export default function AdminDashboard() {
   }, [loadPositions, loadSubscribers])
 
   const handleLogout = async () => {
-    await fetch('/api/admin/auth', { method: 'DELETE' })
+    await supabase.auth.signOut()
     router.push('/admin')
   }
 
