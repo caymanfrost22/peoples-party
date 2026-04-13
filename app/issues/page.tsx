@@ -1,7 +1,15 @@
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import type { PlatformPosition } from '@/lib/supabase'
 
 export const revalidate = 60
+
+const issueRoutes: Record<string, string> = {
+  'Taxes': '/issues/taxes',
+  'Tax Reform': '/issues/taxes',
+  'Economy': '/issues/taxes',
+  'National Debt': '/issues/taxes',
+}
 
 export default async function IssuesPage() {
   const { data: positions } = await supabase
@@ -22,7 +30,7 @@ export default async function IssuesPage() {
         <h1 className="text-5xl font-black mb-3">Issues Breakdown</h1>
         <p className="text-[#8fa3bc] text-lg max-w-xl mx-auto">
           See exactly where both parties agree (and fail), and how we&apos;d do it differently.
-          Every row is live data from our platform database.
+          Click any issue to see our full reform plan.
         </p>
       </div>
 
@@ -45,23 +53,30 @@ export default async function IssuesPage() {
 
         {/* Mobile cards view */}
         <div className="space-y-4 md:hidden">
-          {(positions || []).map((pos: PlatformPosition) => (
-            <div key={pos.id} className="rounded-2xl overflow-hidden"
-              style={{ background: '#1a2a44', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div className="px-4 pt-4 pb-2 flex items-center gap-2">
-                <span className="text-2xl">{pos.issue_icon}</span>
-                <h3 className="font-bold" style={{ color: '#f5a623' }}>{pos.issue}</h3>
-              </div>
-              <div className="px-4 pb-4 space-y-3 text-sm">
-                <div><span className="font-bold" style={{ color: '#3b82f6' }}>🔵 </span><span style={{ color: '#93c5fd' }}>{pos.dem_position}</span></div>
-                <div><span className="font-bold" style={{ color: '#ef4444' }}>🔴 </span><span style={{ color: '#fca5a5' }}>{pos.rep_position}</span></div>
-                <div className="p-3 rounded-xl" style={{ background: 'rgba(6,214,160,0.08)' }}>
-                  <span className="font-bold" style={{ color: '#06d6a0' }}>🟢 </span>
-                  <span className="font-semibold" style={{ color: '#06d6a0' }}>{pos.peoples_position}</span>
+          {(positions || []).map((pos: PlatformPosition) => {
+            const route = issueRoutes[pos.issue]
+            const card = (
+              <div className="rounded-2xl overflow-hidden"
+                style={{ background: '#1a2a44', border: `1px solid ${route ? 'rgba(245,166,35,0.3)' : 'rgba(255,255,255,0.07)'}` }}>
+                <div className="px-4 pt-4 pb-2 flex items-center gap-2">
+                  <span className="text-2xl">{pos.issue_icon}</span>
+                  <h3 className="font-bold" style={{ color: '#f5a623' }}>{pos.issue}</h3>
+                  {route && <span className="ml-auto text-xs" style={{ color: '#f5a623' }}>See plan →</span>}
+                </div>
+                <div className="px-4 pb-4 space-y-3 text-sm">
+                  <div><span className="font-bold" style={{ color: '#3b82f6' }}>🔵 </span><span style={{ color: '#93c5fd' }}>{pos.dem_position}</span></div>
+                  <div><span className="font-bold" style={{ color: '#ef4444' }}>🔴 </span><span style={{ color: '#fca5a5' }}>{pos.rep_position}</span></div>
+                  <div className="p-3 rounded-xl" style={{ background: 'rgba(6,214,160,0.08)' }}>
+                    <span className="font-bold" style={{ color: '#06d6a0' }}>🟢 </span>
+                    <span className="font-semibold" style={{ color: '#06d6a0' }}>{pos.peoples_position}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+            return route
+              ? <Link key={pos.id} href={route}>{card}</Link>
+              : <div key={pos.id}>{card}</div>
+          })}
         </div>
 
         {/* Desktop table */}
@@ -77,20 +92,29 @@ export default async function IssuesPage() {
               </tr>
             </thead>
             <tbody>
-              {(positions || []).map((pos: PlatformPosition, i: number) => (
-                <tr key={pos.id}
-                  style={{ background: i % 2 === 0 ? '#1a2a44' : '#162236', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{pos.issue_icon}</span>
-                      <span className="font-bold text-sm">{pos.issue}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-sm text-center align-top" style={{ color: '#93c5fd' }}>{pos.dem_position}</td>
-                  <td className="p-4 text-sm text-center align-top" style={{ color: '#fca5a5' }}>{pos.rep_position}</td>
-                  <td className="p-4 text-sm text-center align-top font-semibold" style={{ color: '#06d6a0' }}>{pos.peoples_position}</td>
-                </tr>
-              ))}
+              {(positions || []).map((pos: PlatformPosition, i: number) => {
+                const route = issueRoutes[pos.issue]
+                return (
+                  <tr key={pos.id}
+                    style={{ background: i % 2 === 0 ? '#1a2a44' : '#162236', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{pos.issue_icon}</span>
+                        {route ? (
+                          <Link href={route} className="font-bold text-sm hover:underline" style={{ color: '#f5a623' }}>
+                            {pos.issue} →
+                          </Link>
+                        ) : (
+                          <span className="font-bold text-sm">{pos.issue}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-4 text-sm text-center align-top" style={{ color: '#93c5fd' }}>{pos.dem_position}</td>
+                    <td className="p-4 text-sm text-center align-top" style={{ color: '#fca5a5' }}>{pos.rep_position}</td>
+                    <td className="p-4 text-sm text-center align-top font-semibold" style={{ color: '#06d6a0' }}>{pos.peoples_position}</td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

@@ -3,12 +3,12 @@ import { supabase } from '@/lib/supabase'
 import type { PlatformPosition } from '@/lib/supabase'
 
 const stats = [
-  { num: '$6.75T', label: 'Federal Spending 2025', color: '#c8102e' },
-  { num: '$36T+', label: 'National Debt', color: '#f5a623' },
-  { num: '$250B', label: 'Wasted Annually (GAO)', color: '#c8102e' },
-  { num: '75,000+', label: 'Pages in Tax Code', color: '#00b4d8' },
-  { num: '2,400+', label: 'Overlapping Programs', color: '#06d6a0' },
-  { num: '$3,800', label: 'Tariff Cost Per Household', color: '#f5a623' },
+  { num: '$7.42T', label: 'Federal Spending 2026', color: '#c8102e' },
+  { num: '$39T', label: 'National Debt', color: '#f5a623' },
+  { num: '$1T/yr', label: 'Interest on Debt Alone', color: '#c8102e' },
+  { num: '$536B', label: 'Annual Tax Compliance Cost', color: '#00b4d8' },
+  { num: '$0', label: 'Income Tax Under Our Plan', color: '#06d6a0' },
+  { num: '2.4M', label: 'Words in Tax Code', color: '#f5a623' },
 ]
 
 const pillars = [
@@ -77,6 +77,37 @@ export default async function Home() {
           ))}
         </div>
       </div>
+
+      {/* TAX REFORM HIGHLIGHT */}
+      <section className="py-16 px-4" style={{ background: 'linear-gradient(135deg, #0d1f38, #0a1628)' }}>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
+            style={{ background: 'rgba(6,214,160,0.1)', border: '1px solid rgba(6,214,160,0.3)', color: '#06d6a0' }}>
+            🔥 Featured Reform
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-4">
+            Abolish the IRS.<br />
+            <span style={{ color: '#f5a623' }}>Keep Your Whole Paycheck.</span>
+          </h2>
+          <p className="text-[#8fa3bc] text-lg max-w-2xl mx-auto mb-8">
+            Replace 2.4 million words of tax code with one simple consumption tax.
+            The wealthy pay more. The poor are protected. Everyone wins — except the lobbyists.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center mb-8">
+            {['25% Consumption Tax', 'Monthly Prebate', '15% Corporate Rate', 'Abolish the IRS', '$536B Compliance Cost Eliminated'].map(tag => (
+              <span key={tag} className="px-3 py-1 rounded-full text-xs font-bold"
+                style={{ background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.3)', color: '#f5a623' }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+          <Link href="/issues/taxes"
+            className="inline-block px-8 py-3 rounded-full font-bold text-lg transition-all hover:scale-105"
+            style={{ background: '#f5a623', color: '#0a1628' }}>
+            See the Full Tax Reform Plan →
+          </Link>
+        </div>
+      </section>
 
       {/* WHO WE ARE */}
       <section className="py-20 px-4 max-w-6xl mx-auto">
