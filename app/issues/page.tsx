@@ -9,6 +9,9 @@ const issueRoutes: Record<string, string> = {
   'Tax Reform': '/issues/taxes',
   'Economy': '/issues/taxes',
   'National Debt': '/issues/taxes',
+  'Immigration': '/issues/immigration',
+  'Border Security': '/issues/immigration',
+  'Illegal Immigration': '/issues/immigration',
 }
 
 export default async function IssuesPage() {
